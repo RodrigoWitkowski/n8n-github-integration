@@ -1,8 +1,8 @@
 # GitHub API File-Append Workaround (n8n)
 
-An n8n workflow that solves a small but annoying problem: **GitHub's Contents API has no "append" operation.** Every file update is a full overwrite — so appending a single line to a file means read → decode → modify → write, every time.
+I made this to learn a little about the github API and how to integrate it with n8n. For that I had to solve a small but annoying problem: **GitHub's Contents API has no "append" operation.** Every file update is a full overwrite, so appending a single line to a file means read → decode → modify → write, every time.
 
-This project also (for fun) drives that same commit mechanism on a schedule to draw a wave pattern into the GitHub contribution graph.
+The workflow:
 
 <img width="888" height="534" alt="image" src="https://github.com/user-attachments/assets/d7d839d4-0b32-44b5-8e2c-a45876891bd9" />
 
