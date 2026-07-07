@@ -1,4 +1,3 @@
-# n8n-github-integration
 # GitHub API File-Append Workaround (n8n)
 
 An n8n workflow that solves a small but annoying problem: **GitHub's Contents API has no "append" operation.** Every file update is a full overwrite — so appending a single line to a file means read → decode → modify → write, every time.
