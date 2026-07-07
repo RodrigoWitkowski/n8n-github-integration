@@ -1,0 +1,239 @@
+{
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "=cronExpression"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        -240,
+        -16
+      ],
+      "id": "0756ea9f-0ffd-4461-8ffb-e0a371a8f8d7",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -240,
+        176
+      ],
+      "id": "51c0370f-966b-41d5-89d5-eba2dd106817",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "resource": "file",
+        "operation": "get",
+        "owner": {
+          "__rl": true,
+          "value": "YOUR_GITHUB_USERNAME",
+          "mode": "name"
+        },
+        "repository": {
+          "__rl": true,
+          "value": "YOUR_REPOSITORY",
+          "mode": "name"
+        },
+        "filePath": "Commit Timestamps.md",
+        "asBinaryProperty": false,
+        "additionalParameters": {}
+      },
+      "type": "n8n-nodes-base.github",
+      "typeVersion": 1.1,
+      "position": [
+        -16,
+        64
+      ],
+      "id": "41f0c618-3688-4f47-bbcb-ec18f61b5791",
+      "name": "Get a file"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "c5990b48-f971-4496-bf56-c1667d030f27",
+              "name": "decodedContent",
+              "value": "={{ $json.content.base64Decode() }}",
+              "type": "string"
+            },
+            {
+              "id": "e2b40b2f-a59e-4fbe-9956-a6ad419b7b01",
+              "name": "content",
+              "value": "={{ $json.content }}",
+              "type": "string"
+            },
+            {
+              "id": "ea70fb02-c9da-48a9-9967-3f92eda13c98",
+              "name": "string",
+              "value": "Execution timestamp:",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        208,
+        64
+      ],
+      "id": "6cfcac29-9a64-46d0-a5b3-454d2e61d1a6",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "resource": "file",
+        "operation": "edit",
+        "owner": {
+          "__rl": true,
+          "value": "YOUR_GITHUB_USERNAME",
+          "mode": "name"
+        },
+        "repository": {
+          "__rl": true,
+          "value": "YOUR_REPOSITORY",
+          "mode": "name"
+        },
+        "filePath": "Commit Timestamps.md",
+        "fileContent": "={{ $json.decodedContent.replace(/\\n+$/, '') + \"\\n\\n\" + $json.string + $now.toFormat('yyyy-MM-dd HH:mm:ss')}}",
+        "commitMessage": "I studied today!"
+      },
+      "type": "n8n-nodes-base.github",
+      "typeVersion": 1.1,
+      "position": [
+        432,
+        64
+      ],
+      "id": "fe65d810-1a06-4483-a158-497885919c21",
+      "name": "Edit a file"
+    },
+    {
+      "parameters": {
+        "content": "rewrites all content with\nprevious content + execution timestamp",
+        "height": 528,
+        "width": 224,
+        "color": "#CBA725"
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        368,
+        -144
+      ],
+      "id": "221eca69-c303-47d3-bfdf-fe2dcb83ab9a",
+      "name": "Sticky Note3"
+    },
+    {
+      "parameters": {
+        "content": "get contents of a file in github\n",
+        "height": 528,
+        "width": 224,
+        "color": "#CBA725"
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -80,
+        -144
+      ],
+      "id": "9d917e5b-71cc-47a8-846a-a8b53959f306",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "content": "triggers\n",
+        "height": 528,
+        "width": 208,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -288,
+        -144
+      ],
+      "id": "0228979a-7f54-4667-868e-0a28a5495390",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "content": "decodes base64 API response",
+        "height": 528,
+        "width": 224,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        144,
+        -144
+      ],
+      "id": "1e974ca0-a099-419e-8055-4dafd5bbf74b",
+      "name": "Sticky Note"
+    }
+  ],
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Get a file",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Get a file",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get a file": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Edit a file",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit a file": {
+      "main": [
+        []
+      ]
+    }
+  },
+  "pinData": {}
+}
