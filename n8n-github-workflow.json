@@ -4,31 +4,29 @@
       "parameters": {
         "rule": {
           "interval": [
-            {
-              "field": "=cronExpression"
-            }
+            {}
           ]
         }
       },
       "type": "n8n-nodes-base.scheduleTrigger",
       "typeVersion": 1.3,
       "position": [
-        -240,
-        -16
+        -336,
+        -32
       ],
-      "id": "0756ea9f-0ffd-4461-8ffb-e0a371a8f8d7",
-      "name": "Schedule Trigger"
+      "id": "0bb1fd4f-a04e-4d59-a4bc-88a2fc5ba1ca",
+      "name": "Schedule Trigger1"
     },
     {
       "parameters": {},
       "type": "n8n-nodes-base.manualTrigger",
       "typeVersion": 1,
       "position": [
-        -240,
-        176
+        -336,
+        160
       ],
-      "id": "51c0370f-966b-41d5-89d5-eba2dd106817",
-      "name": "When clicking ‘Execute workflow’"
+      "id": "39279ffa-5cdc-4550-854a-af751a9fb6bf",
+      "name": "When clicking 'Execute workflow'"
     },
     {
       "parameters": {
@@ -44,39 +42,56 @@
           "value": "YOUR_REPOSITORY",
           "mode": "name"
         },
-        "filePath": "Commit Timestamps.md",
+        "filePath": "README.md",
         "asBinaryProperty": false,
         "additionalParameters": {}
       },
       "type": "n8n-nodes-base.github",
       "typeVersion": 1.1,
       "position": [
-        -16,
+        -112,
         64
       ],
-      "id": "41f0c618-3688-4f47-bbcb-ec18f61b5791",
+      "id": "7f11d04b-c405-4c28-9ef3-4fe08f9902da",
       "name": "Get a file"
+    },
+    {
+      "parameters": {
+        "url": "https://cataas.com/cat/gif",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Accept",
+              "value": "application/json"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        112,
+        64
+      ],
+      "id": "ca325e0e-b1ef-4114-8b85-238bc1bc1d9b",
+      "name": "HTTP Request"
     },
     {
       "parameters": {
         "assignments": {
           "assignments": [
             {
-              "id": "c5990b48-f971-4496-bf56-c1667d030f27",
+              "id": "58ef9fc4-246d-4065-bcd0-5b25325f983a",
               "name": "decodedContent",
-              "value": "={{ $json.content.base64Decode() }}",
+              "value": "={{ $('Get a file').item.json.content.base64Decode() }}",
               "type": "string"
             },
             {
-              "id": "e2b40b2f-a59e-4fbe-9956-a6ad419b7b01",
-              "name": "content",
-              "value": "={{ $json.content }}",
-              "type": "string"
-            },
-            {
-              "id": "ea70fb02-c9da-48a9-9967-3f92eda13c98",
-              "name": "string",
-              "value": "Execution timestamp:",
+              "id": "4b1719ad-1f2a-4de6-a98a-48fc09f5c49c",
+              "name": "newContent",
+              "value": "={{\n  (() => {\n    const catUrl = $('HTTP Request').item.json.url || '/cat/gif';\n    const absoluteCatUrl = catUrl.startsWith('http')\n      ? catUrl\n      : `https://cataas.com${catUrl}`;\n\n    return $('Get a file').item.json.content\n      .base64Decode()\n      .replace(\n        /<!--CAT GIF START-->[\\s\\S]*?<!--CAT GIF END-->/,\n        `<!--CAT GIF START-->\n![Daily cat](${absoluteCatUrl})\n<!--CAT GIF END-->`\n      );\n  })()\n}}",
               "type": "string"
             }
           ]
@@ -86,10 +101,10 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        208,
+        336,
         64
       ],
-      "id": "6cfcac29-9a64-46d0-a5b3-454d2e61d1a6",
+      "id": "e615e526-cb2b-4895-b47c-cb7d97fded5d",
       "name": "Edit Fields"
     },
     {
@@ -106,86 +121,22 @@
           "value": "YOUR_REPOSITORY",
           "mode": "name"
         },
-        "filePath": "Commit Timestamps.md",
-        "fileContent": "={{ $json.decodedContent.replace(/\\n+$/, '') + \"\\n\\n\" + $json.string + $now.toFormat('yyyy-MM-dd HH:mm:ss')}}",
-        "commitMessage": "I studied today!"
+        "filePath": "README.md",
+        "fileContent": "={{ $json.newContent }}",
+        "commitMessage": "chore: refresh README cat gif"
       },
       "type": "n8n-nodes-base.github",
       "typeVersion": 1.1,
       "position": [
-        432,
+        560,
         64
       ],
-      "id": "fe65d810-1a06-4483-a158-497885919c21",
+      "id": "9cc7a0ce-b1b2-4680-9be6-51427f40ced0",
       "name": "Edit a file"
-    },
-    {
-      "parameters": {
-        "content": "rewrites all content with\nprevious content + execution timestamp",
-        "height": 528,
-        "width": 224,
-        "color": "#CBA725"
-      },
-      "type": "n8n-nodes-base.stickyNote",
-      "typeVersion": 1,
-      "position": [
-        368,
-        -144
-      ],
-      "id": "221eca69-c303-47d3-bfdf-fe2dcb83ab9a",
-      "name": "Sticky Note3"
-    },
-    {
-      "parameters": {
-        "content": "get contents of a file in github\n",
-        "height": 528,
-        "width": 224,
-        "color": "#CBA725"
-      },
-      "type": "n8n-nodes-base.stickyNote",
-      "typeVersion": 1,
-      "position": [
-        -80,
-        -144
-      ],
-      "id": "9d917e5b-71cc-47a8-846a-a8b53959f306",
-      "name": "Sticky Note2"
-    },
-    {
-      "parameters": {
-        "content": "triggers\n",
-        "height": 528,
-        "width": 208,
-        "color": 5
-      },
-      "type": "n8n-nodes-base.stickyNote",
-      "typeVersion": 1,
-      "position": [
-        -288,
-        -144
-      ],
-      "id": "0228979a-7f54-4667-868e-0a28a5495390",
-      "name": "Sticky Note1"
-    },
-    {
-      "parameters": {
-        "content": "decodes base64 API response",
-        "height": 528,
-        "width": 224,
-        "color": 5
-      },
-      "type": "n8n-nodes-base.stickyNote",
-      "typeVersion": 1,
-      "position": [
-        144,
-        -144
-      ],
-      "id": "1e974ca0-a099-419e-8055-4dafd5bbf74b",
-      "name": "Sticky Note"
     }
   ],
   "connections": {
-    "Schedule Trigger": {
+    "Schedule Trigger1": {
       "main": [
         [
           {
@@ -196,7 +147,7 @@
         ]
       ]
     },
-    "When clicking ‘Execute workflow’": {
+    "When clicking 'Execute workflow'": {
       "main": [
         [
           {
@@ -208,6 +159,17 @@
       ]
     },
     "Get a file": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
       "main": [
         [
           {
