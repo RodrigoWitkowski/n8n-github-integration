@@ -1,27 +1,33 @@
 # n8n GitHub README cat updater
 
-A small n8n workflow that reads a repository `README.md`, fetches a fresh cat GIF URL from CATAAS, replaces a marked section in the README, and commits the updated file back to GitHub.
+A small n8n workflow that reads a target repository `README.md`, fetches a fresh cat GIF URL from CATAAS, replaces a marked section in that README, and commits the updated file back to GitHub.
 
 This repository is meant as a learning exercise for GitHub file operations, Base64 decoding, HTTP requests, string replacement, and automated commits.
 
+This repository stores the workflow export and documentation. The workflow itself is meant to update another repository, such as a GitHub profile repository like `RodrigoWitkowski/RodrigoWitkowski`.
+
 ## Workflow preview
 
-![Sanitized n8n workflow preview](docs/workflow-screenshot.svg)
+![n8n workflow](image.png)
 
 ## Managed README block
 
-The workflow replaces the content between the `CAT GIF START` and `CAT GIF END` HTML comments in the target `README.md`.
+The workflow replaces the content between the `CAT GIF START` and `CAT GIF END` HTML comments in the target repository's `README.md`.
 
+Example block for the target README:
+
+```md
 <!--CAT GIF START-->
 ![Daily cat](https://cataas.com/cat/gif)
 <!--CAT GIF END-->
+```
 
 Keep exactly one managed block in the target README so the replacement stays predictable.
 
 ## Workflow summary
 
 1. Starts manually or from `Schedule Trigger1`.
-2. Reads `README.md` from a GitHub repository.
+2. Reads `README.md` from a target GitHub repository.
 3. Decodes the Base64 content returned by the GitHub API.
 4. Requests cat metadata from CATAAS.
 5. Replaces the managed README block with a new Markdown image.
@@ -31,17 +37,16 @@ Keep exactly one managed block in the target README so the replacement stays pre
 
 ```text
 .
+|-- image.png
 |-- README.md
 |-- n8n-github-workflow.json
-`-- docs/
-    `-- workflow-screenshot.svg
 ```
 
 ## Requirements
 
 - An n8n instance, either self-hosted or n8n Cloud.
 - A GitHub account.
-- A GitHub repository where you can edit `README.md`.
+- A GitHub repository whose `README.md` you want to update.
 - A GitHub personal access token with repository contents write access.
 
 ## Setup
@@ -94,9 +99,18 @@ The exported workflow assumes the target file is:
 README.md
 ```
 
+The target repository can be different from this repository.
+
+For a GitHub profile README, use your username for both values. Example:
+
+```text
+Owner: RodrigoWitkowski
+Repository: RodrigoWitkowski
+```
+
 ### 5. Prepare the target README
 
-Make sure the target `README.md` contains exactly one managed block using the same marker comments shown above.
+Make sure the target repository's `README.md` contains exactly one managed block using the same marker comments shown above.
 
 If the markers are missing, the replacement expression leaves the file unchanged.
 
@@ -121,7 +135,7 @@ Open `Schedule Trigger1` and choose when the workflow should run. Before relying
 3. Confirm `Get a file` returns the README content.
 4. Confirm `HTTP Request` returns cat metadata.
 5. Confirm `Edit a file` creates a commit.
-6. Open the target README on GitHub and verify that the managed block now points to a fresh cat GIF URL.
+6. Open the target repository on GitHub and verify that its README now points to a fresh cat GIF URL.
 
 ### 9. Activate the workflow
 
