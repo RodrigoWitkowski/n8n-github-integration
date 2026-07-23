@@ -26,7 +26,7 @@ Keep exactly one managed block in the target README so the replacement stays pre
 
 ## Workflow summary
 
-1. Starts manually or from `Schedule Trigger1`.
+1. Starts manually or from `Schedule Trigger`.
 2. Reads `README.md` from a target GitHub repository.
 3. Decodes the Base64 content returned by the GitHub API.
 4. Requests cat metadata from CATAAS.
@@ -126,7 +126,7 @@ It sends `Accept: application/json` so CATAAS returns metadata with a cat URL in
 
 ### 7. Optional: configure the schedule
 
-Open `Schedule Trigger1` and choose when the workflow should run. Before relying on the schedule, confirm the workflow timezone in n8n matches your expected runtime.
+Open `Schedule Trigger` and choose when the workflow should run. Before relying on the schedule, confirm the workflow timezone in n8n matches your expected runtime.
 
 ### 8. Test manually
 
